@@ -74,7 +74,7 @@ class Tweet(snscrape.base.Item):
 
 	def __str__(self):
 		print(self.__dict__)
-		return self.url
+		return self
 
 
 class Medium:
