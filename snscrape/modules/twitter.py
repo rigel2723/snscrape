@@ -74,7 +74,7 @@ class Tweet(snscrape.base.Item):
 
 	def __str__(self):
 		print(self.__dict__)
-		return self
+		return self.url
 
 
 class Medium:
@@ -556,6 +556,7 @@ class _TwitterAPIScraper(snscrape.base.Scraper):
 			kwargs['hashtags'] = [o['text'] for o in tweet['entities']['hashtags']]
 		if tweet['entities'].get('symbols'):
 			kwargs['cashtags'] = [o['text'] for o in tweet['entities']['symbols']]
+		print("T2T")
 		return Tweet(**kwargs)
 
 	def _render_text_with_urls(self, text, urls):
