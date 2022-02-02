@@ -556,8 +556,8 @@ class _TwitterAPIScraper(snscrape.base.Scraper):
 			kwargs['hashtags'] = [o['text'] for o in tweet['entities']['hashtags']]
 		if tweet['entities'].get('symbols'):
 			kwargs['cashtags'] = [o['text'] for o in tweet['entities']['symbols']]
-		print("T2T123")
-		print(kwargs)
+		# print("T2T123")
+		# print(kwargs)
 		return Tweet(**kwargs)
 
 	def _render_text_with_urls(self, text, urls):
