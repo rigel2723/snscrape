@@ -73,7 +73,7 @@ class Tweet(snscrape.base.Item):
 	tcooutlinksss = snscrape.base._DeprecatedProperty('tcooutlinksss', lambda self: ' '.join(self.tcooutlinks) if self.tcooutlinks else '', 'tcooutlinks')
 
 	def __str__(self):
-		print(self.__dict__)
+		# print(self.__dict__)
 		return self.url
 
 
