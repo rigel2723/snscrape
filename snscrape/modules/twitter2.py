@@ -3,14 +3,14 @@ __all__ = [
 	'User', 'UserLabel',
 	'Trend',
 	'GuestTokenManager',
-	'TwitterSearchScraper',
-	'TwitterUserScraper',
-	'TwitterProfileScraper',
-	'TwitterHashtagScraper',
-	'TwitterTweetScraperMode',
-	'TwitterTweetScraper',
-	'TwitterListPostsScraper',
-	'TwitterTrendsScraper',
+	'TwitterSearchScraper2',
+	'TwitterUserScraper2',
+	'TwitterProfileScraper2',
+	'TwitterHashtagScraper2',
+	'TwitterTweetScraper2Mode2',
+	'TwitterTweetScraper2',
+	'TwitterListPostsScraper2',
+	'TwitterTrendsScraper2',
 ]
 
 
@@ -731,7 +731,7 @@ class _TwitterAPIScraper(snscrape.base.Scraper):
 		return super()._cli_construct(argparseArgs, *args, **kwargs)
 
 
-class TwitterSearchScraper(_TwitterAPIScraper):
+class TwitterSearchScraper2(_TwitterAPIScraper):
 	name = 'twitter-search'
 
 	def __init__(self, query, *, cursor = None, top = False, **kwargs):
@@ -807,7 +807,7 @@ class TwitterSearchScraper(_TwitterAPIScraper):
 		return cls._cli_construct(args, args.query, cursor = args.cursor, top = args.top)
 
 
-class TwitterUserScraper(TwitterSearchScraper):
+class TwitterUserScraper2(TwitterSearchScraper2):
 	name = 'twitter-user'
 
 	def __init__(self, user, **kwargs):
@@ -887,7 +887,7 @@ class TwitterUserScraper(TwitterSearchScraper):
 		return cls._cli_construct(args, user = int(args.user) if args.isUserId else args.user)
 
 
-class TwitterProfileScraper(TwitterUserScraper):
+class TwitterProfileScraper2(TwitterUserScraper2):
 	name = 'twitter-profile'
 
 	def get_items(self):
@@ -923,7 +923,7 @@ class TwitterProfileScraper(TwitterUserScraper):
 			yield from self._graphql_timeline_instructions_to_tweets(instructions)
 
 
-class TwitterHashtagScraper(TwitterSearchScraper):
+class TwitterHashtagScraper2(TwitterSearchScraper2):
 	name = 'twitter-hashtag'
 
 	def __init__(self, hashtag, **kwargs):
@@ -939,7 +939,7 @@ class TwitterHashtagScraper(TwitterSearchScraper):
 		return cls._cli_construct(args, args.hashtag)
 
 
-class TwitterTweetScraperMode(enum.Enum):
+class TwitterTweetScraper2Mode2(enum.Enum):
 	SINGLE = 'single'
 	SCROLL = 'scroll'
 	RECURSE = 'recurse'
@@ -953,10 +953,10 @@ class TwitterTweetScraperMode(enum.Enum):
 		return cls.SINGLE
 
 
-class TwitterTweetScraper(_TwitterAPIScraper):
+class TwitterTweetScraper2(_TwitterAPIScraper):
 	name = 'twitter-tweet'
 
-	def __init__(self, tweetId, *, mode = TwitterTweetScraperMode.SINGLE, **kwargs):
+	def __init__(self, tweetId, *, mode = TwitterTweetScraper2Mode2.SINGLE, **kwargs):
 		self._tweetId = tweetId
 		self._mode = mode
 		super().__init__(f'https://twitter.com/i/web/status/{self._tweetId}', **kwargs)
@@ -984,7 +984,7 @@ class TwitterTweetScraper(_TwitterAPIScraper):
 		variables = paginationVariables.copy()
 		del variables['cursor'], variables['referrer']
 		url = 'https://twitter.com/i/api/graphql/8svRea_Lc0_mdhwP6dqe0Q/TweetDetail'
-		if self._mode is TwitterTweetScraperMode.SINGLE:
+		if self._mode is TwitterTweetScraper2Mode2.SINGLE:
 			obj = self._get_api_data(url, _TwitterAPIType.GRAPHQL, params = variables)
 			if not obj['data']:
 				return
@@ -995,12 +995,12 @@ class TwitterTweetScraper(_TwitterAPIScraper):
 					if entry['entryId'] == f'tweet-{self._tweetId}' and entry['content']['entryType'] == 'TimelineTimelineItem' and entry['content']['itemContent']['itemType'] == 'TimelineTweet':
 						yield self._graphql_timeline_tweet_item_result_to_tweet(entry['content']['itemContent']['tweet_results']['result'])
 						break
-		elif self._mode is TwitterTweetScraperMode.SCROLL:
+		elif self._mode is TwitterTweetScraper2Mode2.SCROLL:
 			for obj in self._iter_api_data(url, _TwitterAPIType.GRAPHQL, variables, paginationVariables, direction = _ScrollDirection.BOTH):
 				if not obj['data']:
 					continue
 				yield from self._graphql_timeline_instructions_to_tweets(obj['data']['threaded_conversation_with_injections']['instructions'], includeConversationThreads = True)
-		elif self._mode is TwitterTweetScraperMode.RECURSE:
+		elif self._mode is TwitterTweetScraper2Mode2.RECURSE:
 			seenTweets = set()
 			queue = collections.deque()
 			queue.append(self._tweetId)
@@ -1029,10 +1029,10 @@ class TwitterTweetScraper(_TwitterAPIScraper):
 
 	@classmethod
 	def _cli_from_args(cls, args):
-		return cls._cli_construct(args, args.tweetId, mode = TwitterTweetScraperMode._cli_from_args(args))
+		return cls._cli_construct(args, args.tweetId, mode = TwitterTweetScraper2Mode2._cli_from_args(args))
 
 
-class TwitterListPostsScraper(TwitterSearchScraper):
+class TwitterListPostsScraper22(TwitterSearchScraper2):
 	name = 'twitter-list-posts'
 
 	def __init__(self, listName, **kwargs):
@@ -1048,7 +1048,7 @@ class TwitterListPostsScraper(TwitterSearchScraper):
 		return cls._cli_construct(args, args.list)
 
 
-class TwitterTrendsScraper(_TwitterAPIScraper):
+class TwitterTrendsScraper2(_TwitterAPIScraper):
 	name = 'twitter-trends'
 
 	def __init__(self, **kwargs):
