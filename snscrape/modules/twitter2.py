@@ -646,6 +646,17 @@ class _TwitterAPIScraper(snscrape.base.Scraper):
 			kwargs['retweetedTweet'] = self._graphql_timeline_tweet_item_result_to_tweet(tweet['retweeted_status_result']['result'])
 		if 'quoted_status_result' in result:
 			if result['quoted_status_result']['result']['__typename'] == 'TweetTombstone':
+				# print(str(result["core"]["user_results"]["result"]["legacy"]["screen_name"]))
+				# print(str(self._user))
+				# time.sleep(5)
+				# if (str(result["core"]["user_results"]["result"]["legacy"]["screen_name"]) != "devchart"):
+				# 	print(str(result))
+				# 	time.sleep(10)
+				dateNow = datetime.datetime.now()
+				dateYmd = dateNow.strftime("%Y_%m_%d")
+				with open(f"logs/scrape-tombstone_{dateYmd}.logs", "a") as file_object:
+					logsData = {"date": str(dateNow), "user": str(self._user), "entry": str(result['quoted_status_result']['result'])}
+					file_object.write(json.dumps(logsData) + "\n\n")
 				kwargs['quotedTweet'] = TweetRef(id = int(tweet['quoted_status_id_str']))
 			else:
 				kwargs['quotedTweet'] = self._graphql_timeline_tweet_item_result_to_tweet(result['quoted_status_result']['result'])
