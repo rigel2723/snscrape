@@ -743,7 +743,7 @@ class _TwitterAPIScraper(snscrape.base.Scraper):
 
 
 class TwitterSearchScraper2(_TwitterAPIScraper):
-	name = 'twitter-search'
+	name = 'twitter-search2'
 
 	def __init__(self, query, *, cursor = None, top = False, **kwargs):
 		if not query.strip():
