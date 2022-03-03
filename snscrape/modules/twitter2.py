@@ -899,7 +899,7 @@ class TwitterUserScraper2(TwitterSearchScraper2):
 
 
 class TwitterProfileScraper2(TwitterUserScraper2):
-	name = 'twitter-profile'
+	name = 'twitter-profile2'
 
 	def get_items(self):
 		if not self._isUserId:
